@@ -1,0 +1,90 @@
+# Flask Twilio Integration
+
+Este projeto utiliza Flask para construir um webhook que processa mensagens via Twilio. Ele também suporta integração com bibliotecas como dotenv para configuração do ambiente e OpenAI para funcionalidades avançadas.
+
+## Pré-requisitos
+
+- Python 3.8 ou superior
+- [pip](https://pip.pypa.io/en/stable/) (gerenciador de pacotes do Python)
+- [Conta Twilio](https://www.twilio.com/try-twilio)
+- [Chave de API OpenAI](https://platform.openai.com/signup/)
+
+---
+## Instalação
+
+1. **Clone o repositório**:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+   cd seu-repositorio
+   ```
+
+2. **Crie um ambiente virtual** (opcional, mas recomendado):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
+   ```
+
+3. **Instale as dependências**:
+   Se o repositório incluir um arquivo `requirements.txt`:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Caso contrário, instale manualmente as bibliotecas necessárias:
+   ```bash
+   pip install flask twilio python-dotenv openai
+   ```
+
+4. **(Opcional) Atualize o arquivo `requirements.txt` com as dependências instaladas**:
+   ```bash
+   pip freeze > requirements.txt
+   ```
+
+---
+
+## Configuração do Ambiente
+
+1. **Crie um arquivo `.env` na raiz do projeto**:
+   ```bash
+   touch .env
+   ```
+
+2. **Adicione as variáveis de ambiente no `.env`**:
+   ```env
+   TWILIO_ACCOUNT_SID=your_twilio_account_sid
+   TWILIO_AUTH_TOKEN=your_twilio_auth_token
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+
+---
+
+## Executando o Servidor
+
+1. **Inicie o servidor Flask**:
+   ```bash
+   python app.py
+   ```
+
+2. O servidor será iniciado em `http://127.0.0.1:5000/`.
+
+---
+
+## Testando a API
+
+- Use uma ferramenta como [Postman](https://www.postman.com/) ou `curl` para enviar requisições para o servidor:
+  - **POST**: Enviar uma mensagem para o webhook.
+  - **GET**: Recuperar o histórico de mensagens (se implementado).
+
+---
+
+## Notas Adicionais
+
+- Certifique-se de que o webhook do Twilio está configurado para apontar para o URL onde o servidor Flask está hospedado.
+- Para hospedar o servidor em produção, considere usar um serviço como [Heroku](https://www.heroku.com/) ou [Render](https://render.com/).
+
+---
+
+## Contato
+
+Se você tiver dúvidas ou sugestões, fique à vontade para abrir uma [issue](https://github.com/seu-usuario/seu-repositorio/issues) ou entrar em contato.
+
