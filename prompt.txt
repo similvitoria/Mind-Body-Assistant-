@@ -48,3 +48,162 @@ Exemplo de Relatório Gerado:
 - Locais Recomendados: Clínica de apoio psicológico na região.
 - Atividades Sugeridas: Ouvir músicas relaxantes antes de dormir.
 
+
+
+[
+  {
+    "type": "function",
+    "name": "introduce_chatbot",
+    "function": {
+      "description": "Introduz o chatbot de maneira acolhedora e empática ao usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "chatbot_name": {
+            "type": "string",
+            "description": "O nome do chatbot que será apresentado ao usuário."
+          }
+        },
+        "required": ["chatbot_name"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "request_consent",
+    "function": {
+      "description": "Pergunta ao usuário se deseja iniciar a conversa com o chatbot.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "prompt_message": {
+            "type": "string",
+            "description": "Mensagem usada para solicitar o consentimento do usuário."
+          }
+        },
+        "required": ["prompt_message"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "analyze_problem",
+    "function": {
+      "description": "Recebe uma descrição do problema enfrentado pelo usuário e classifica como físico ou mental.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_input": {
+            "type": "string",
+            "description": "Descrição do problema fornecida pelo usuário."
+          }
+        },
+        "required": ["user_input"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "provide_support",
+    "function": {
+      "description": "Oferece conselhos ou sugestões baseados no problema descrito pelo usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "problem_type": {
+            "type": "string",
+            "description": "O tipo do problema enfrentado pelo usuário, pode ser 'saúde física' ou 'saúde mental'."
+          },
+          "problem_description": {
+            "type": "string",
+            "description": "Descrição do problema enfrentado pelo usuário."
+          }
+        },
+        "required": ["problem_type", "problem_description"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "suggest_nearby_locations",
+    "function": {
+      "description": "Sugere locais próximos que podem oferecer ajuda para o problema relatado pelo usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "problem_type": {
+            "type": "string",
+            "description": "O tipo do problema enfrentado pelo usuário, pode ser 'saúde física' ou 'saúde mental'."
+          },
+          "user_location": {
+            "type": "string",
+            "description": "A localização aproximada do usuário."
+          }
+        },
+        "required": ["problem_type", "user_location"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "suggest_activities",
+    "function": {
+      "description": "Sugere atividades ou práticas para aliviar o problema relatado pelo usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "problem_type": {
+            "type": "string",
+            "description": "O tipo do problema enfrentado pelo usuário, pode ser 'saúde física' ou 'saúde mental'."
+          }
+        },
+        "required": ["problem_type"],
+        "additionalProperties": False
+      }
+    }
+  },
+  {
+    "type": "function",
+    "name": "generate_interaction_report",
+    "function": {
+      "description": "Gera um relatório final da interação com o usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "interaction_time": {
+            "type": "string",
+            "description": "Data e hora da interação."
+          },
+          "problem_description": {
+            "type": "string",
+            "description": "Resumo do problema relatado pelo usuário."
+          },
+          "advice_provided": {
+            "type": "string",
+            "description": "Conselhos ou passos sugeridos pelo chatbot."
+          },
+          "locations_recommended": {
+            "type": "string",
+            "description": "Locais recomendados para tratamento, se aplicável."
+          },
+          "activities_suggested": {
+            "type": "string",
+            "description": "Atividades ou práticas sugeridas, se aplicável."
+          }
+        },
+        "required": [
+          "interaction_time",
+          "problem_description",
+          "advice_provided"
+        ],
+        "additionalProperties": False
+      }
+    }
+  }
+]
+
