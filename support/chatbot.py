@@ -19,9 +19,16 @@ def chat_with_gpt(messages: dict, tools):
     
     return response
 
-""" conversa = ''
-while True:
-    conversa += input('usurio: ')
-    resp = chat_with_gpt(conversa)
-    print(resp)
-    conversa += resp """
+def transcribe_audio(audio_url):
+    try:
+        # Abrindo o arquivo de áudio
+        with open(audio_url, "rb") as audio_file:
+            # Enviando o áudio para a transcrição
+            response = openai.Audio.transcribe(model="whisper-1", file=audio_file)
+        
+        # Retorna o texto transcrito
+        return response['text']
+    
+    except Exception as e:
+        print(f"Erro ao transcrever o áudio: {e}")
+        return None

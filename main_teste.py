@@ -1,36 +1,40 @@
 from flask import Flask, request, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 from threading import Thread
-from support.messeges import send_active_twilio_message
-from support.functions.controller import tools
+from support.messeges import handle_message
 from support.chatbot import chat_with_gpt
-from support.functions.python.introduction import introdution
-import traceback
 
 app = Flask(__name__)
 
-message_history = []
+""" user_message_history = {}
 
 def handle_messege(phone_number, message):
     try:
-        messages = [
-            {"role": "system", "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental."},
-            {"role": "user", "content": message}
-        ]
-
-        analysis_response = chat_with_gpt(messages, tools)['choices'][0]['message']['content']
-        send_active_twilio_message(phone_number, analysis_response)
-        #print(f"Análise do problema: {analysis_response}")
-            
-        message_history.append({"phone_number": phone_number, "message": message, "response": analysis_response})
+        if phone_number not in user_message_history:
+            user_message_history[phone_number] = [
+                {"role": "system", "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental."}
+            ]
         
+        user_message_history[phone_number].append({"role": "user", "content": message})
+
+        response = chat_with_gpt(user_message_history[phone_number], tools)
+        
+        analysis_response = response['choices'][0]['message']['content']
+
+        user_message_history[phone_number].append({"role": "assistant", "content": analysis_response})
+
+        send_active_twilio_message(phone_number, analysis_response)
+        
+        print(f"Resposta enviada para {phone_number}: {analysis_response}")
+        print(f"Função chamada {response['choices'][0]['message']['function_call']['name']}")
+    
     except Exception as e:
         print(f"Erro: {e}")
         tb = traceback.extract_tb(e.__traceback__)
         for frame in tb:
             print(f"Arquivo: {frame.filename}, Linha: {frame.lineno}, Função: {frame.name}")
         print("Fim do rastreamento.")
-        print(message_history)
+        print(user_message_history.get(phone_number, [])) """
 
 
 # Endpoint principal
@@ -43,13 +47,13 @@ def webhook():
         print(f"Mensagem recebida de {phone_number}: {message}")
         
         thread = Thread(
-            target=handle_messege,
+            target=handle_message,
             args=(phone_number, message)
         )
         thread.start()
                 
         resp = MessagingResponse()
-        resp.message('Estou processando sua resposta...')
+    
         return str(resp)
     
     except Exception as e:
