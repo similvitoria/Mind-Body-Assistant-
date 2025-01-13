@@ -101,31 +101,35 @@ def handle_location_request(phone_number: str, function_call: dict) -> None:
     try:
         # Tenta carregar os argumentos do JSON
         arguments = json.loads(function_call.get('arguments', '{}'))
+        if arguments: 
+            query_input = " ".join(str(value) for key, value in arguments.items())
+            
+            logger.info(f'QUERY: {query_input}')
 
-        query_input = " ".join(str(value) for key, value in arguments.items())
-        
-        # Chama a função para obter locais próximos
-        locations = get_nearby_locations_by_city_and_neighborhood(query_input)
-        print(locations)
-        
-        if locations and isinstance(locations, list):
-            # Limita o número de locais para evitar mensagens muito longas
-            max_locations = 10
-            locations = locations[:max_locations]
+            # Chama a função para obter locais próximos
+            locations = get_nearby_locations_by_city_and_neighborhood(query_input)
+            print(locations)
             
-            locais = "Encontrei os seguintes locais próximos:\n\n" + "\n\n".join(
-                f"📍 {local.get('name', 'Nome não disponível')}\n"
-                f"📫 Endereço: {local.get('address', 'Endereço não disponível')}"
-                for local in locations
-            )
-            
-            if len(locations) == max_locations:
-                locais += "\n\nMostrei apenas os 10 locais mais próximos. Se precisar de mais opções, me avise!"
+            if locations and isinstance(locations, list):
+                # Limita o número de locais para evitar mensagens muito longas
+                max_locations = 10
+                locations = locations[:max_locations]
+                
+                locais = "Encontrei os seguintes locais próximos:\n\n" + "\n\n".join(
+                    f"📍 {local.get('name', 'Nome não disponível')}\n"
+                    f"📫 Endereço: {local.get('address', 'Endereço não disponível')}"
+                    for local in locations
+                )
+                
+                if len(locations) == max_locations:
+                    locais += "\n\nMostrei apenas os 10 locais mais próximos. Se precisar de mais opções, me avise!"
+            else:
+                locais = "Desculpe, não encontrei locais próximos para o serviço solicitado na região especificada."
+
+            send_active_twilio_message(phone_number, locais)
+            logger.info(f"Locais enviados para {phone_number}")
         else:
-            locais = "Desculpe, não encontrei locais próximos para o serviço solicitado na região especificada."
-
-        send_active_twilio_message(phone_number, locais)
-        logger.info(f"Locais enviados para {phone_number}")
+            send_active_twilio_message(phone_number, "Forneça seu bairro e cidade por favor!")
 
     except json.JSONDecodeError:
         logger.error("Erro ao decodificar argumentos JSON")
@@ -139,10 +143,9 @@ def handle_location_request(phone_number: str, function_call: dict) -> None:
             phone_number,
             "Desculpe, ocorreu um erro ao buscar locais. Por favor, tente novamente."
         )
+        
 def handle_message(phone_number: str, message: str) -> None:
-    """
-    Manipula mensagens recebidas com melhor tratamento de erros e validação.
-    """
+  
     try:
         if not validate_message(message):
             send_active_twilio_message(
@@ -156,7 +159,7 @@ def handle_message(phone_number: str, message: str) -> None:
             user_message_history[phone_number] = [
                 {
                     "role": "system", 
-                    "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental se apresente como tal, coloque emotions(apenas na apresentacao) e seja gentil em poucas palavrar."
+                    "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental se apresente como tal, coloque emotions(apenas na apresentacao) e seja gentil em poucas palavras."
                 }
             ]
 
@@ -166,8 +169,6 @@ def handle_message(phone_number: str, message: str) -> None:
             "content": message.strip()
         })
 
-        
-
         # Obter resposta do GPT
         response = chat_with_gpt(user_message_history[phone_number], tools)
         
@@ -176,6 +177,8 @@ def handle_message(phone_number: str, message: str) -> None:
 
         analysis_response = response['choices'][0]['message'].get('content')
         
+        logger.info(f"RESPOSTA DO GPT {analysis_response}")
+
         # Processar function calls se existirem
         if 'function_call' in response['choices'][0]['message']:
             function_call = response['choices'][0]['message']['function_call']
@@ -184,8 +187,19 @@ def handle_message(phone_number: str, message: str) -> None:
             if function_call['name'] == 'handle_user_location_request':
                 print(function_call)
                 handle_location_request(phone_number, function_call)
-            
-        # Processar resposta normal
+            elif analysis_response:
+                user_message_history[phone_number].append({
+                    "role": "assistant", 
+                    "content": analysis_response
+                })
+                logger.info(f"Resposta enviada para {phone_number}")
+                send_active_twilio_message(phone_number, analysis_response)
+            else:
+                send_active_twilio_message(
+                    phone_number, 
+                    'Por favor, reenvie sua mensagem e informe melhor o problema!'
+                )
+        
         elif analysis_response:
             user_message_history[phone_number].append({
                 "role": "assistant", 
