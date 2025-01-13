@@ -1,50 +1,41 @@
-def get_location():
+def get_location() -> dict:
     return {
         "type": "function",
-        "name": "get_location",
+        "name": "handle_user_location_request",
         "function": {
-            "description": """Gera uma consulta de tratamentos médicos próximos, baseando-se no problema de saúde informado e na localização fornecida. 
-            Os parâmetros DEVEM ser fornecidos EXATAMENTE nesta ordem:
-            1. 'problem' - Tipo de tratamento ou especialidade médica
-            2. 'location' - Nome da cidade
-            3. 'neighborhood' - Nome do bairro
-            A sequência é obrigatória: problem -> location -> neighborhood. O resultado será uma query de busca para tratamentos próximos, que pode ser utilizada em uma API de busca de estabelecimentos de saúde.""",
+            "description": "Analisa a solicitação do usuário para encontrar serviços específicos em uma determinada localização.",
             "parameters": {
                 "type": "object",
-                "required": ["problem", "location", "neighborhood"],
-                "additionalProperties": False,
-                "propertyOrder": ["problem", "location", "neighborhood"],
                 "properties": {
-                    "problem": {
+                    "query_input": {
                         "type": "string",
-                        "description": "PRIMEIRO PARÂMETRO - Tipo do tratamento ou especialidade médica",
-                        "enum": [
-                            "psicólogo",
-                            "psiquiatra",
-                            "terapia",
-                            "fisioterapia",
-                            "ortopedia",
-                            "clínica médica",
-                            "hospital",
-                            "pronto socorro",
-                            "nutricionista",
-                            "academia",
-                            "centro de reabilitação"
-                        ]
+                        "description": "Descrição da busca fornecida pelo usuário, incluindo o tipo de serviço e a localização desejada."
+                    }
+                },
+                "required": ["query_input"],
+                "additionalProperties": True
+            },
+            "responses": {
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string",
+                        "description": "Tipo de serviço solicitado pelo usuário."
                     },
                     "location": {
                         "type": "string",
-                        "description": "SEGUNDO PARÂMETRO - Nome da cidade (ex: 'São Paulo', 'Rio de Janeiro')"
-                    },
-                    "neighborhood": {
-                        "type": "string",
-                        "description": "TERCEIRO PARÂMETRO - Nome do bairro (ex: 'Moema', 'Pinheiros')"
+                        "description": "Localização onde o serviço é procurado."
                     }
-                }
+                },
+                "required": ["service", "location"],
+                "additionalProperties": True
             },
-            "returns": {
-                "type": "string",
-                "description": "Uma consulta que pode ser utilizada para buscar tratamentos médicos e especialidades próximas ao usuário, com base na cidade e bairro fornecidos."
+            "examples": {
+                "query_input": "me indique psicologos no salgado filho, belo horizonte",
+                "returns": {
+                    "service": "psicólogos",
+                    "location": "Salgado Filho, Belo Horizonte"
+                }
             }
         }
     }
