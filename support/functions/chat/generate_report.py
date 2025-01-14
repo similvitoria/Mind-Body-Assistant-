@@ -15,6 +15,7 @@ def generate_report() -> str:
                 },
                 "required": ["data_hora", "problema", "conselhos", "locais", "atividades"],
                 "additionalProperties": False
-            }
+            },
+            "strict": True
         }
     }

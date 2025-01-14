@@ -3,24 +3,28 @@ def get_location() -> dict:
         "type": "function",
         "name": "handle_user_location_request",
         "function": {
-            "description": "Analisa a solicitação do usuário para encontrar serviços específicos em uma determinada localização.",
+            "description": "Encontra locais OU PROFISSIONAIS para tratamentos específicos em uma determinada localização.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "query_input": {
+                    "service": {
                         "type": "string",
-                        "description": "Descrição da busca fornecida pelo usuário, incluindo o tipo de serviço e a localização desejada."
+                        "description": "Tipo de tratamento OU PROFISSIONAIS"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "Localização desejada."
                     }
                 },
-                "required": ["query_input"],
-                "additionalProperties": True
+                "required": ["service", "location"],
+                "additionalProperties": False
             },
             "responses": {
                 "type": "object",
                 "properties": {
                     "service": {
                         "type": "string",
-                        "description": "Tipo de serviço solicitado pelo usuário."
+                        "description": "Tipo de tratamento OU PROFISSIONAIS."
                     },
                     "location": {
                         "type": "string",
@@ -28,14 +32,23 @@ def get_location() -> dict:
                     }
                 },
                 "required": ["service", "location"],
-                "additionalProperties": True
+                "additionalProperties": False
             },
-            "examples": {
-                "query_input": "me indique psicologos no salgado filho, belo horizonte",
+        },
+        "examples": [
+            {
+                "query_input": "me indique psicólogos no Salgado Filho, Belo Horizonte",
                 "returns": {
                     "service": "psicólogos",
                     "location": "Salgado Filho, Belo Horizonte"
                 }
+            },
+            {
+                "query_input": "quais são os melhores nutricionistas no centro de São Paulo?",
+                "returns": {
+                    "service": "nutricionistas",
+                    "location": "Centro, São Paulo"
+                }
             }
-        }
+        ]
     }

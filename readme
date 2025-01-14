@@ -1,20 +1,52 @@
 # Flask Twilio Integration
 
-Este projeto utiliza Flask para construir um webhook que processa mensagens via Twilio. Ele também suporta integração com bibliotecas como dotenv para configuração do ambiente e OpenAI para funcionalidades avançadas.
+Este projeto utiliza Flask para construir um webhook que processa mensagens via Twilio.
+O chatbot é uma ferramenta interativa e amigável projetada para oferecer suporte relacionado à saúde física e mental. Ele combina tecnologia avançada de processamento de linguagem natural com recursos de integração de APIs, como o Google Maps, para fornecer uma experiência útil e prática aos usuários.
+
+## Funcionalidades Principais
+1. **Conselhos de Saúde Física e Mental**
+
+Análise do Problema: O chatbot analisa as mensagens do usuário para identificar se o problema relatado está relacionado à saúde física ou mental.
+Conselhos Personalizados: Com base na análise, oferece sugestões e conselhos práticos, como técnicas de relaxamento, hábitos saudáveis e estratégias para enfrentar situações desafiadoras.
+Interação Empática: Usa uma abordagem gentil e acolhedora, garantindo que o usuário se sinta ouvido e apoiado.
+
+2. **Localização de Profissionais de Saúde Próximos**
+
+Busca Personalizada: O chatbot utiliza a API do Google Maps para localizar profissionais de saúde próximos, como psicólogos, nutricionistas, médicos, ou outros especialistas.
+Resultados Baseados na Localização: Os usuários podem fornecer o bairro e a cidade, e o chatbot retorna uma lista de serviços próximos, incluindo nome, endereço e informações de contato.
+Limite de Resultados: Para facilitar a consulta, o chatbot apresenta até um número definido de opções mais relevantes.
+
+---
+
+### Componentes Principais:
+
+1. **Flask**: Framework para gerenciar rotas HTTP e a lógica de backend.
+2. **Twilio**: Plataforma para envio e recebimento de mensagens (SMS, WhatsApp, etc.).
+3. **OpenAI API**: Para processar a lógica do chatbot e gerar respostas inteligentes.
+4. **Python-dotenv**: Gerenciamento de variáveis de ambiente para proteger credenciais.
+
+### Fluxo de Dados:
+1. O usuário envia uma mensagem para um número configurado no Twilio.
+2. O Twilio dispara um webhook para o servidor Flask com os detalhes da mensagem.
+3. O Flask processa a mensagem e utiliza a API da OpenAI para gerar uma resposta.
+4. O Flask retorna a resposta ao Twilio, que entrega ao usuário final.
+
+---
 
 ## Pré-requisitos
 
-- Python 3.8 ou superior
-- [pip](https://pip.pypa.io/en/stable/) (gerenciador de pacotes do Python)
-- [Conta Twilio](https://www.twilio.com/try-twilio)
-- [Chave de API OpenAI](https://platform.openai.com/signup/)
+- Python 3.8 ou superior.
+- [pip](https://pip.pypa.io/en/stable/) (gerenciador de pacotes do Python).
+- [Conta Twilio](https://www.twilio.com/try-twilio).
+- [Chave de API OpenAI](https://platform.openai.com/signup).
 
 ---
+
 ## Instalação
 
 1. **Clone o repositório**:
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/similvitoria/Mind-Body-Assistant-
    cd seu-repositorio
    ```
 
@@ -53,8 +85,13 @@ Este projeto utiliza Flask para construir um webhook que processa mensagens via 
    ```env
    TWILIO_ACCOUNT_SID=your_twilio_account_sid
    TWILIO_AUTH_TOKEN=your_twilio_auth_token
+   TWILIO_PHONE_NUMBER=your_twilio_phone_number
    OPENAI_API_KEY=your_openai_api_key
+   GOOGLE_API_KEY=your_googlemaps_api_key
    ```
+
+3. **Configure o Twilio para apontar para o webhook do Flask**:
+   - No painel do Twilio, configure o URL do webhook para onde as mensagens serão enviadas (ex.: `http://seu-servidor.com/webhook`).
 
 ---
 
@@ -67,24 +104,38 @@ Este projeto utiliza Flask para construir um webhook que processa mensagens via 
 
 2. O servidor será iniciado em `http://127.0.0.1:5000/`.
 
+3. **Teste localmente usando ferramentas como ngrok**:
+   - Para expor seu servidor local, utilize o [ngrok](https://ngrok.com/):
+     ```bash
+     ngrok http 5000
+     ```
+   - Copie o URL gerado pelo ngrok e configure no painel do Twilio como webhook.
+
 ---
 
 ## Testando a API
 
-- Use uma ferramenta como [Postman](https://www.postman.com/) ou `curl` para enviar requisições para o servidor:
-  - **POST**: Enviar uma mensagem para o webhook.
-  - **GET**: Recuperar o histórico de mensagens (se implementado).
+- **Enviando mensagens**:
+  - Use o número de telefone ou canal configurado no Twilio para enviar mensagens ao webhook.
+---
+
+## Hospedagem em Produção
+
+Considere hospedar o servidor Flask em uma plataforma de produção como:
+
+- [Heroku](https://www.heroku.com/).
+- [Render](https://render.com/).
+- [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/).
+
+### Configurações para Produção:
+- Certifique-se de definir as variáveis de ambiente na plataforma de hospedagem.
+- Utilize HTTPS para comunicação segura entre Twilio e o servidor.
 
 ---
 
 ## Notas Adicionais
 
-- Certifique-se de que o webhook do Twilio está configurado para apontar para o URL onde o servidor Flask está hospedado.
-- Para hospedar o servidor em produção, considere usar um serviço como [Heroku](https://www.heroku.com/) ou [Render](https://render.com/).
+- Atualize o webhook do Twilio sempre que o URL do servidor mudar.
+- Monitore logs e utilize ferramentas de depuração para identificar problemas em produção.
 
----
-
-## Contato
-
-Se você tiver dúvidas ou sugestões, fique à vontade para abrir uma [issue](https://github.com/seu-usuario/seu-repositorio/issues) ou entrar em contato.
 
