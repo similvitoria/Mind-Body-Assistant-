@@ -134,7 +134,7 @@ def handle_message(phone_number: str, message: str) -> None:
             user_message_history[phone_number] = [
                 {
                     "role": "system",
-                    "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental. Se apresente como tal, coloque emojis (apenas na apresentação) e seja gentil em poucas palavras."
+                    "content": "Você é um chatbot que auxilia usuários com questões de saúde física e mental não aceite mensagens que não sejam relacionadas a saude fisica e mental. Se apresente como tal, coloque emojis (apenas na apresentação) e seja gentil em poucas palavras."
                 }
             ]
 
@@ -148,18 +148,10 @@ def handle_message(phone_number: str, message: str) -> None:
 
         if 'function_call' in response['choices'][0]['message']:
             function_call = response['choices'][0]['message']['function_call']
-
             if function_call['name'] == 'handle_user_location_request':
                 handle_location_request(phone_number, function_call)
-            elif analysis_response:
-                user_message_history[phone_number].append({"role": "assistant", "content": analysis_response})
-                send_active_twilio_message(phone_number, analysis_response)
-            else:
-                send_active_twilio_message(
-                    phone_number,
-                    'Por favor, reenvie sua mensagem e informe melhor o problema!'
-                )
         elif analysis_response:
+            logger.info('NAO TENHO FUNCTION CALL')
             user_message_history[phone_number].append({"role": "assistant", "content": analysis_response})
             send_active_twilio_message(phone_number, analysis_response)
         else:
